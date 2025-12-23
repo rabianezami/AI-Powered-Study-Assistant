@@ -7,11 +7,17 @@ class BaseAgent:
         # main function agent runs
         raise NotImplementedError
     
+# Placeholder agents
 class AnalyzerAgent(BaseAgent):
-    pass 
+    def execute(self, input_data, memory):
+        memory.save("last_input", input_data)
+        return {"text": input_data}
 
 class WorkerAgent(BaseAgent):
-    pass 
+    def execute(self, input_data, memory):
+        memory.save("processed", input_data)
 
 class ResponseAgent(BaseAgent):
-    pass 
+    def execute(self, input_data, memory):
+        last = memory.get("last_input")
+        return f"I received: {last}"
