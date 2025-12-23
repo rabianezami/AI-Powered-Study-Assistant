@@ -1,11 +1,11 @@
 from agents import BaseAgent
-from memory import memory
-from permissions import permissionSystm
+from memory import Memory
+from permissions import PermissionSystm
 
-class orchestrator:
+class Orchestrator:
     def __init__(self):
-        self.memory = memory()
-        self.permissions = permissionSystm()
+        self.memory = Memory()
+        self.permissions = PermissionSystm()
         self.agents = {}
 
     def register_agent(self, agent: BaseAgent):

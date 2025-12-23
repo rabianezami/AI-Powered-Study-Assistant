@@ -1,4 +1,4 @@
-class permissionSystem:
+class PermissionSystem:
     def __init__(self):
         self.permissions = {}
 
