@@ -8,10 +8,10 @@ class BaseAgent:
         raise NotImplementedError
     
 class AnalyzerAgent(BaseAgent):
-    pass # logic in phase 2
+    pass 
 
 class WorkerAgent(BaseAgent):
-    pass # logic in phase 2
+    pass 
 
 class ResponseAgent(BaseAgent):
-    pass # logic in phase 2
+    pass 
