@@ -15,6 +15,7 @@ class Orchestrator:
         # decide which agent should hande the request
         safety = self.agents.get("safety")
         generator = self.agents.get("question_generator")
+        explainer = self.agents.get("explanation")
         responder = self.agents.get("responder")
 
         input_data = {
@@ -29,6 +30,11 @@ class Orchestrator:
             return
 
         result = generator.execute(input_data, self.memory)
-        response = responder.execute(result, self.memory)
+        explanation = explainer.execute(result, self.memory)
+
+        response = responder.execute({
+            "question": result["question"],
+            "explanation": explanation
+        }, self.memory)
 
         print(response)
