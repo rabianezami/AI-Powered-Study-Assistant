@@ -74,3 +74,13 @@ class ExplanationAgent(BaseAgent):
 
         memory.save("explanation", explanation)
         return explanation
+    
+class ResponseAgent(BaseAgent):
+    def execute(self, input_data, memory):
+        question = input_data.get("question")
+        explanation = input_data.get("explanation")
+
+        return (
+            f"Generated Question:\n{question}\n\n"
+            f"Explanation:\n{explanation}"
+        )
