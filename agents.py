@@ -19,9 +19,6 @@ class WorkerAgent(BaseAgent):
     def execute(self, input_data, memory):
         memory.save("processed", input_data)
 
-class ResponseAgent(BaseAgent):
-    pass 
-
 class QuestionGeneratorAgent(BaseAgent):
     def __init__(self):
         super().__init__("question_generator")
