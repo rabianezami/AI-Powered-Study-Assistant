@@ -54,6 +54,20 @@ class QuestionGeneratorAgent(BaseAgent):
         }
 
 
+class SafetyAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("safety")
+
+    def execute(self, input_data, memory):
+        forbidden_topics = ["weapon", "harm", "violence", "drug", "kill"]
+
+        topic = input_data.get("topic", "").lower()
+
+        for bad in forbidden_topics:
+            if bad in topic:
+                return False
+            
+            return True
 class ExplanationAgent(BaseAgent):
     def __init__(self):
         super().__init__("explanation")
