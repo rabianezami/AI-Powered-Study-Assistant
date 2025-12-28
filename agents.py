@@ -55,3 +55,22 @@ class QuestionGeneratorAgent(BaseAgent):
             "answer": answer,
             "difficulty": difficulty
         }
+
+class ExplanationAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("explanation")
+
+    def execute(self, input_data, memory):
+        answer = memory.get("answer")
+
+        if not answer:
+            return "No answer available to explain."
+        
+        explanation = (
+            f"{answer}\n\n"
+            f"Example:\n"
+            f"Python is often used for automating tasks, processing data, building web apps, and writing scripts."
+        )
+
+        memory.save("explanation", explanation)
+        return explanation
