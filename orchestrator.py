@@ -13,16 +13,5 @@ class Orchestrator:
 
     def route(self, user_input: str):
         # decide which agent should hande the request
-        analyzer = self.agents.get("analyzer")
-        worker = self.agents.get("worker")
-        responder = self.agents.get("responder")
-
-        if not analyzer or not worker or not responder:
-            print("Agents are not registered correctly.")
-            return
-        
-        analysis = analyzer.execute(user_input, self.memory)
-        worker.execute(analysis, self.memory)
-        response = responder.execute(None, self.memory)
-
+      
         print(response)
