@@ -53,6 +53,7 @@ class QuestionGeneratorAgent(BaseAgent):
             "difficulty": difficulty
         }
 
+
 class ExplanationAgent(BaseAgent):
     def __init__(self):
         super().__init__("explanation")
@@ -71,6 +72,7 @@ class ExplanationAgent(BaseAgent):
 
         memory.save("explanation", explanation)
         return explanation
+    
     
 class ResponseAgent(BaseAgent):
     def execute(self, input_data, memory):
