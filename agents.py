@@ -19,9 +19,6 @@ class WorkerAgent(BaseAgent):
     def execute(self, input_data, memory):
         memory.save("processed", input_data)
 
-class ResponseAgent(BaseAgent):
-    pass 
-
 class QuestionGeneratorAgent(BaseAgent):
     def __init__(self):
         super().__init__("question_generator")
@@ -56,6 +53,7 @@ class QuestionGeneratorAgent(BaseAgent):
             "difficulty": difficulty
         }
 
+
 class SafetyAgent(BaseAgent):
     def __init__(self):
         super().__init__("safety")
@@ -88,3 +86,14 @@ class ExplanationAgent(BaseAgent):
 
         memory.save("explanation", explanation)
         return explanation
+    
+    
+class ResponseAgent(BaseAgent):
+    def execute(self, input_data, memory):
+        question = input_data.get("question")
+        explanation = input_data.get("explanation")
+
+        return (
+            f"Generated Question:\n{question}\n\n"
+            f"Explanation:\n{explanation}"
+        )
