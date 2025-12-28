@@ -13,5 +13,22 @@ class Orchestrator:
 
     def route(self, user_input: str):
         # decide which agent should hande the request
-      
+        safety = self.agents.get("safety")
+        generator = self.agents.get("question_generator")
+        responder = self.agents.get("responder")
+
+        input_data = {
+            "topic": user_input,
+            "difficulty": "easy"
+        }
+
+        is_safe = safety.execute(input_data, self.memory)
+  
+        if not is_safe:
+            print("❌ Topic is not allowed.")
+            return
+
+        result = generator.execute(input_data, self.memory)
+        response = responder.execute(result, self.memory)
+
         print(response)
