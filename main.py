@@ -3,7 +3,6 @@ from agents import AnalyzerAgent, WorkerAgent, ResponseAgent, SafetyAgent, Quest
 
 orc = Orchestrator()
 
-# real actions add in phase 2
 orc.register_agent(SafetyAgent())
 orc.register_agent(QuestionGeneratorAgent())
 orc.register_agent(ExplanationAgent())
