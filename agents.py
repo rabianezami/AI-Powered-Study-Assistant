@@ -34,6 +34,26 @@ class SafetyAgent(BaseAgent):
                 return False
             
             return True
+        
+class DifficultyControllerAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("difficulty_controller")
+
+    def execute(self, input_data, memory):
+        correct = memory.get("correct_count")
+        wrong = memory.get("wrong_count")
+
+        if correct >= 3:
+            difficulty = "hard"
+        elif wrong >= 2:
+            difficulty = "easy"
+        else:
+            difficulty = "medium"
+
+        input_data["difficulty"] = difficulty
+        memory.save("difficulty", difficulty)
+
+        return input_data
 
 class QuestionGeneratorAgent(BaseAgent):
     def __init__(self):
