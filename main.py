@@ -10,15 +10,19 @@ from agents import (
 
 memory = Memory()
 
-# real actions add in phase 2
-orc.register_agent(SafetyAgent())
-orc.register_agent(QuestionGeneratorAgent())
-orc.register_agent(ExplanationAgent())
-orc.register_agent(AnalyzerAgent("analyzer"))
-orc.register_agent(WorkerAgent("worker"))
-orc.register_agent(ResponseAgent("responder"))
+agents = {
+    "safety": SafetyAgent("safety"),
+    "difficulty_generator": DifficultyControllerAgent(),
+    "question_generator": QuestionGeneratorAgent(),
+    "explanation": ExplanationAgent(),
+    "responder": ResponseAgent("responder")
+}
+
+orc = Orchestrator(agents, memory)
 
 # start 
 user_input = input("User: ")
-orc.route(user_input)
+result = orc.run(user_input)
+
+print(result)
 
