@@ -99,15 +99,16 @@ class ExplanationAgent(BaseAgent):
 
         if not answer:
             return "No answer available to explain."
-        
-        explanation = (
+        else:
+            explanation = (
             f"{answer}\n\n"
             f"Example:\n"
             f"Python is often used for automating tasks, processing data, building web apps, and writing scripts."
         )
 
         memory.save("explanation", explanation)
-        return explanation
+        input_data["explanation"] = explanation
+        return input_data
     
     
 class ResponseAgent(BaseAgent):
