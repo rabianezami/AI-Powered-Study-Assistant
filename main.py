@@ -1,7 +1,14 @@
 from orchestrator import Orchestrator 
-from agents import AnalyzerAgent, WorkerAgent, ResponseAgent, SafetyAgent, QuestionGeneratorAgent, ExplanationAgent
+from memory import Memory
+from agents import (
+    SafetyAgent,
+    DifficultyControllerAgent,
+    QuestionGeneratorAgent,
+    ExplanationAgent,
+    ResponseAgent
+)
 
-orc = Orchestrator()
+memory = Memory()
 
 # real actions add in phase 2
 orc.register_agent(SafetyAgent())
