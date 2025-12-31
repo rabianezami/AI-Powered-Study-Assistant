@@ -12,12 +12,12 @@ class Orchestrator:
     def run(self, user_input):
         input_data = {"topic": user_input}
 
-        pipeline = {
+        pipeline = [
             "difficulty_controller",
             "question_generator",
             "explanation",
             "responder"
-        }
+        ]
 
         data = input_data
 
