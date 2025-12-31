@@ -1,40 +1,30 @@
-from agents import BaseAgent
-from memory import Memory
-from permissions import PermissionSystem
-
 class Orchestrator:
-    def __init__(self):
-        self.memory = Memory()
-        self.permissions = PermissionSystem()
-        self.agents = {}
+    def __init__(self, agents, memory):
+        self.agents = agents
+        self.memory = memory
 
-    def register_agent(self, agent: BaseAgent):
-        self.agents[agent.name] = agent
+    def get_agent(self, name):
+        agent = self.agents.get(name)
+        if not agent:
+            raise ValueError(f"Agent '{name}' not found")
+        return agent
+    
+    def run(self, user_input):
+        input_data = {"topic": user_input}
 
-    def route(self, user_input: str):
-        # decide which agent should hande the request
-        safety = self.agents.get("safety")
-        generator = self.agents.get("question_generator")
-        explainer = self.agents.get("explanation")
-        responder = self.agents.get("responder")
+        pipeline = [
+            "difficulty_controller",
+            "question_generator",
+            "explanation",
+            "responder"
+        ]
 
-        input_data = {
-            "topic": user_input,
-            "difficulty": "easy"
-        }
+        data = input_data
 
-        is_safe = safety.execute(input_data, self.memory)
-  
-        if not is_safe:
-            print("❌ Topic is not allowed.")
-            return
+        for agent_name in pipeline:
+            agent = self.get_agent(agent_name)
+            result = agent.execute(data, self.memory)
 
-        result = generator.execute(input_data, self.memory)
-        explanation = explainer.execute(result, self.memory)
-
-        response = responder.execute({
-            "question": result["question"],
-            "explanation": explanation
-        }, self.memory)
-
-        print(response)
+            if isinstance(result, dict):
+                data = result
+        return result
