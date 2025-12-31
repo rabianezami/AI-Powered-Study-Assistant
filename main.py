@@ -11,7 +11,7 @@ from agents import (
 memory = Memory()
 
 agents = {
-    "safety": SafetyAgent("safety"),
+    "safety": SafetyAgent(),
     "difficulty_generator": DifficultyControllerAgent(),
     "question_generator": QuestionGeneratorAgent(),
     "explanation": ExplanationAgent(),
