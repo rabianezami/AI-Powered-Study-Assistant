@@ -19,6 +19,42 @@ class WorkerAgent(BaseAgent):
     def execute(self, input_data, memory):
         memory.save("processed", input_data)
 
+
+class SafetyAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("safety")
+
+    def execute(self, input_data, memory):
+        forbidden_topics = ["weapon", "harm", "violence", "drug", "kill"]
+
+        topic = input_data.get("topic", "").lower()
+
+        for bad in forbidden_topics:
+            if bad in topic:
+                return False
+            
+            return True
+        
+class DifficultyControllerAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("difficulty_controller")
+
+    def execute(self, input_data, memory):
+        correct = memory.get("correct_count")
+        wrong = memory.get("wrong_count")
+
+        if correct >= 3:
+            difficulty = "hard"
+        elif wrong >= 2:
+            difficulty = "easy"
+        else:
+            difficulty = "medium"
+
+        input_data["difficulty"] = difficulty
+        memory.save("difficulty", difficulty)
+
+        return input_data
+
 class QuestionGeneratorAgent(BaseAgent):
     def __init__(self):
         super().__init__("question_generator")
@@ -54,20 +90,6 @@ class QuestionGeneratorAgent(BaseAgent):
         }
 
 
-class SafetyAgent(BaseAgent):
-    def __init__(self):
-        super().__init__("safety")
-
-    def execute(self, input_data, memory):
-        forbidden_topics = ["weapon", "harm", "violence", "drug", "kill"]
-
-        topic = input_data.get("topic", "").lower()
-
-        for bad in forbidden_topics:
-            if bad in topic:
-                return False
-            
-            return True
 class ExplanationAgent(BaseAgent):
     def __init__(self):
         super().__init__("explanation")
@@ -77,15 +99,16 @@ class ExplanationAgent(BaseAgent):
 
         if not answer:
             return "No answer available to explain."
-        
-        explanation = (
+        else:
+            explanation = (
             f"{answer}\n\n"
             f"Example:\n"
             f"Python is often used for automating tasks, processing data, building web apps, and writing scripts."
         )
 
         memory.save("explanation", explanation)
-        return explanation
+        input_data["explanation"] = explanation
+        return input_data
     
     
 class ResponseAgent(BaseAgent):
