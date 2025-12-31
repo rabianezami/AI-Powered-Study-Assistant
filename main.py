@@ -12,7 +12,7 @@ memory = Memory()
 
 agents = {
     "safety": SafetyAgent(),
-    "difficulty_generator": DifficultyControllerAgent(),
+    "difficulty_controller": DifficultyControllerAgent(),
     "question_generator": QuestionGeneratorAgent(),
     "explanation": ExplanationAgent(),
     "responder": ResponseAgent("responder")
