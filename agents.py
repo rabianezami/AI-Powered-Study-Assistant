@@ -105,27 +105,29 @@ class FeedbackAgent(BaseAgent):
         super().__init__("feedback")
 
     def execute(self, input_data, memory):
-        correct = input_data.get("correct", False)
+      """
+      input_data: 
+      {
+          "feedback": "y" | "n"
+      }
+      """
 
-        if correct: 
-            memory.increment("correct_count")
-        else:
-            memory.increment("wrong_count")
+      feedback = input_data.get("feedback")
 
-        correct_count = memory.get("correct_count")
-        wrong_count = memory.get("wrong_count")
+      if feedback not in ("y", "n"):
+          return input_data
+      
+      if feedback == "y":
+          memory.increment("correct_count")
+          memory.reset("wrong_count")
+          memory.save("last_feedback", "correct")
 
-        if correct_count >= 3:
-            difficulty = "hard"
-        elif wrong_count >= 2:
-            difficulty = "easy"
-        else:
-            difficulty = "medium"
-
-        memory.save("difficulty", difficulty)
-
-        return {"difficulty": difficulty}
+      else:
+          memory.increment("wrong_count")
+          memory.reset("correct_count")
+          memory.save("last_feedback", "wrong")
    
+      return input_data
     
 class ResponseAgent(BaseAgent):
     def execute(self, input_data, memory):

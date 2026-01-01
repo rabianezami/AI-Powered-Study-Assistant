@@ -3,7 +3,7 @@ class Memory:
         self.store = {
             "correct_count": 0,
             "wrong_count": 0,
-            "difficulty": "easy"
+            "difficulty": "medium"
         }
       
     def save(self, key, value):
