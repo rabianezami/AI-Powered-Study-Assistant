@@ -33,7 +33,7 @@ class SafetyAgent(BaseAgent):
             if bad in topic:
                 return False
             
-            return True
+        return True
         
 class DifficultyControllerAgent(BaseAgent):
     def __init__(self):
