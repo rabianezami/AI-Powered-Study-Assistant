@@ -27,4 +27,11 @@ class Orchestrator:
 
             if isinstance(result, dict):
                 data = result
+
+        print(result)
+
+        feedback = input("Was your answer correct? (y/n)").strip().lower
+        feedback_agent = self.get_agent("feedback")
+        feedback_agent.execute({"feedback": feedback}, self.memory)
+
         return result

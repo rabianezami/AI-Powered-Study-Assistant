@@ -33,26 +33,15 @@ class SafetyAgent(BaseAgent):
             if bad in topic:
                 return False
             
-            return True
+        return True
         
 class DifficultyControllerAgent(BaseAgent):
     def __init__(self):
         super().__init__("difficulty_controller")
 
     def execute(self, input_data, memory):
-        correct = memory.get("correct_count")
-        wrong = memory.get("wrong_count")
-
-        if correct >= 3:
-            difficulty = "hard"
-        elif wrong >= 2:
-            difficulty = "easy"
-        else:
-            difficulty = "medium"
-
+        difficulty = memory.get("difficulty", "easy")
         input_data["difficulty"] = difficulty
-        memory.save("difficulty", difficulty)
-
         return input_data
 
 class QuestionGeneratorAgent(BaseAgent):
@@ -110,6 +99,35 @@ class ExplanationAgent(BaseAgent):
         input_data["explanation"] = explanation
         return input_data
     
+
+class FeedbackAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("feedback")
+
+    def execute(self, input_data, memory):
+      """
+      input_data: 
+      {
+          "feedback": "y" | "n"
+      }
+      """
+
+      feedback = input_data.get("feedback")
+
+      if feedback not in ("y", "n"):
+          return input_data
+      
+      if feedback == "y":
+          memory.increment("correct_count")
+          memory.reset("wrong_count")
+          memory.save("last_feedback", "correct")
+
+      else:
+          memory.increment("wrong_count")
+          memory.reset("correct_count")
+          memory.save("last_feedback", "wrong")
+   
+      return input_data
     
 class ResponseAgent(BaseAgent):
     def execute(self, input_data, memory):
