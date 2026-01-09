@@ -6,7 +6,7 @@ class BaseAgent:
         self.allowed_actions = allowed_actions or []
 
     def execute(self, input_data, memory):
-        # main function agent runs
+       
         raise NotImplementedError
     
 # Placeholder agents
@@ -49,25 +49,48 @@ class QuestionGeneratorAgent(BaseAgent):
         super().__init__("question_generator")
 
     def execute(self, input_data, memory):
-        topic = input_data.get("topic")
+        topic = input_data.get("topic", "python")
         difficulty = input_data.get("difficulty", "easy")
 
         questions = {
             "python": {
                 "easy": [
-                    ("What is python", "Python is a programming language.")
+                    ("What is python", "Python is a programming language."),
+                    ("Who created Python?", "Python was created by Guido van Rossum."),
+                    ("Is Python interpreted?", "Yes, Python is an interpreted language.")
                 ],
                 "medium": [
-                    ("What is a list in python?", "A list is a collection of items.")
+                    ("What is a list in python?", "A list is a collection of items."),
+                    ("Difference between list and tuple?", "Lists are mutable, tuples are immutable."),
+                    ("What is a dictionary?", "A dictionary stores key-value pairs.")
                 ],
                 "hard": [
-                    ("Explain list comperhension", "A concise way to creat lists.")
+                    ("Explain list comperhension", "A concise way to creat lists."),
+                     ("What is a generator?", "A function that yields values one at a time."),
+                    ("Explain decorators", "Functions that modify other functions.")
                 ]
             }
         }
 
-        topic_data = questions.get(topic, questions["python"])
-        question, answer = random.choice(topic_data[difficulty])
+        all_questions = questions.get(topic, questions["python"])[difficulty]
+
+        asked_questions = memory.get("asked_questions", {})
+        topic_asked = asked_questions.setdefault(topic, {})
+        asked_for_difficulty = topic_asked.setdefault(difficulty, [])
+
+        available = [
+            qa for qa in all_questions
+            if qa[0] not in asked_for_difficulty
+        ]
+
+        if not available: 
+            asked_for_difficulty.clear()
+            available = all_questions
+
+        question, answer = random.choice(available)
+
+        asked_for_difficulty.append(question)
+        memory.save("asked_questions", asked_questions)
 
         memory.save("question", question)
         memory.save("answer", answer)
@@ -108,24 +131,29 @@ class FeedbackAgent(BaseAgent):
       """
       input_data: 
       {
-          "feedback": "y" | "n"
+          "is_correct": True | False
       }
       """
 
-      feedback = input_data.get("feedback")
+      is_correct = input_data.get("is_correct")
 
-      if feedback not in ("y", "n"):
+      if is_correct is None:
           return input_data
       
-      if feedback == "y":
+      if is_correct:
           memory.increment("correct_count")
           memory.reset("wrong_count")
           memory.save("last_feedback", "correct")
-
       else:
           memory.increment("wrong_count")
           memory.reset("correct_count")
           memory.save("last_feedback", "wrong")
+
+      if memory.get("correct_count") >= 3:
+           memory.save("difficulty", "hard")
+
+      elif memory.get("wrong_count") >= 2:
+          memory.save("difficulty", "easy")
    
       return input_data
     
@@ -138,3 +166,20 @@ class ResponseAgent(BaseAgent):
             f"Generated Question:\n{question}\n\n"
             f"Explanation:\n{explanation}"
         )
+    
+class EvaluationAgent(BaseAgent):
+    def __init__(self):
+        super().__init__("evaluation")
+        
+    def execute(self, input_data, memory):
+        user_answer = input_data.get("user_answer", "").lower().strip()
+        correct_answer = memory.get("answer", "").lower().strip()
+
+        if not user_answer or not correct_answer:
+            return {"is_correct": False}
+        
+        is_correct = user_answer in correct_answer or correct_answer in user_answer
+
+        memory.save("last_result", is_correct)
+
+        return {"is_correct": is_correct}

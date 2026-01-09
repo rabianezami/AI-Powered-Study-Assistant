@@ -28,10 +28,28 @@ class Orchestrator:
             if isinstance(result, dict):
                 data = result
 
-        print(result)
+        print(f"Question: {data.get('question')}")
 
-        feedback = input("Was your answer correct? (y/n)").strip().lower
+        user_answer = input("Your answer: ")
+
+        evaluator = self.get_agent("evaluation")
+        evaluation = evaluator.execute(
+            {"user_answer": user_answer},
+            self.memory
+        )
+
+        if evaluation["is_correct"]:
+            print("✔ Correct! Well done.")
+        else:
+            print("❌ Not quite. Let's try another one.")
+
+        if not evaluation["is_correct"]:
+            explanation = self.memory.get("explanation")
+            if explanation: 
+                print("\nExplanation")
+                print(explanation)
+
         feedback_agent = self.get_agent("feedback")
-        feedback_agent.execute({"feedback": feedback}, self.memory)
+        feedback_agent.execute(evaluation, self.memory)
 
-        return result
+        return evaluation
