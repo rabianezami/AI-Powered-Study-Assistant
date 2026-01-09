@@ -6,7 +6,8 @@ from agents import (
     QuestionGeneratorAgent,
     ExplanationAgent,
     ResponseAgent,
-    FeedbackAgent
+    FeedbackAgent,
+    EvaluationAgent
 )
 
 memory = Memory()
@@ -17,7 +18,8 @@ agents = {
     "question_generator": QuestionGeneratorAgent(),
     "explanation": ExplanationAgent(),
     "responder": ResponseAgent("responder"),
-    "feedback": FeedbackAgent()
+    "feedback": FeedbackAgent(),
+    "evaluation": EvaluationAgent(),
 }
 
 orc = Orchestrator(agents, memory)

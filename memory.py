@@ -3,7 +3,8 @@ class Memory:
         self.store = {
             "correct_count": 0,
             "wrong_count": 0,
-            "difficulty": "medium"
+            "difficulty": "medium",
+            "asked_question": {}
         }
       
     def save(self, key, value):
@@ -13,7 +14,7 @@ class Memory:
         return self.store.get(key, default)
     
     def increment(self, key, amount=1):
-        self.store[key] = self.store.get(key, 0) + amount
+        self.store[key] = self.store.get(key, 0) + 1
         return self.store[key]
     
     def reset(self, key):
