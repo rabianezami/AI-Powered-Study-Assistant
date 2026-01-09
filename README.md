@@ -35,20 +35,16 @@ I welcome ideas, suggestions, and creative improvements! Here's how you can cont
 1. Make sure you are on the develop branch:
     ```bash
    git checkout develop
-  
-2. Pull the latest changes:
-    ```bash
-   git pull
     
-3. Create your own feature branch:
+2. Create your own feature branch:
     ```bash
    git checkout -b feature/your-idea
    
-4. Make your changes and commit with a clear, short message.
-5. Push your branch to GitHub:
+3. Make your changes and commit with a clear, short message.
+4. Push your branch to GitHub:
     ```bash
    git push origin feature/your-idea
    
-8. Open a Pull Request to develop and describe what you added or improved.
+5. Open a Pull Request to develop and describe what you added or improved.
 
 
