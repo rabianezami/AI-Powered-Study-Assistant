@@ -1,0 +1,5 @@
+*-backup/
+*-mirror/
+*-mirror2/
+fix_email.py
+push_all_branches.sh
